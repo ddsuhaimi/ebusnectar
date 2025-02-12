@@ -10,7 +10,7 @@ import Fleet from "./pages/Fleet";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Bookings from "./pages/Bookings";
-import Routes from "./pages/Routes";
+import RoutesPage from "./pages/Routes";
 import NotFound from "./pages/NotFound";
 import Navigation from "./components/Navigation";
 
@@ -34,7 +34,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/bookings" element={<Bookings />} />
-            <Route path="/routes" element={<Routes />} />
+            <Route path="/routes" element={<RoutesPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

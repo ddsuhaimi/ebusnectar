@@ -1,23 +1,21 @@
-
 import { useState } from "react";
 import { Plus, Search, MapPin } from "lucide-react";
-
-interface Route {
-  id: string;
-  from: string;
-  to: string;
-  duration: string;
-  price: number;
-  departureTime: string;
-  status: "active" | "inactive";
-}
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import type { Route } from "@/types";
 
 const Routes = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddRoute, setShowAddRoute] = useState(false);
+  const [newRoute, setNewRoute] = useState({
+    from: "",
+    to: "",
+    duration: "",
+    price: "",
+    departureTime: "",
+  });
 
   // Mock routes data
-  const routesData: Route[] = [
+  const [routes, setRoutes] = useState<Route[]>([
     {
       id: "1",
       from: "Jakarta",
@@ -36,9 +34,22 @@ const Routes = () => {
       departureTime: "10:00",
       status: "active",
     },
-  ];
+  ]);
 
-  const filteredRoutes = routesData.filter(
+  const handleAddRoute = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newRouteEntry: Route = {
+      id: (routes.length + 1).toString(),
+      ...newRoute,
+      price: Number(newRoute.price),
+      status: "active",
+    };
+    setRoutes([...routes, newRouteEntry]);
+    setShowAddRoute(false);
+    setNewRoute({ from: "", to: "", duration: "", price: "", departureTime: "" });
+  };
+
+  const filteredRoutes = routes.filter(
     (route) =>
       route.from.toLowerCase().includes(searchQuery.toLowerCase()) ||
       route.to.toLowerCase().includes(searchQuery.toLowerCase())
@@ -62,6 +73,82 @@ const Routes = () => {
             Add New Route
           </button>
         </div>
+
+        <Dialog open={showAddRoute} onOpenChange={setShowAddRoute}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Route</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleAddRoute} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">From</label>
+                <input
+                  type="text"
+                  value={newRoute.from}
+                  onChange={(e) => setNewRoute({ ...newRoute, from: e.target.value })}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">To</label>
+                <input
+                  type="text"
+                  value={newRoute.to}
+                  onChange={(e) => setNewRoute({ ...newRoute, to: e.target.value })}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Duration</label>
+                <input
+                  type="text"
+                  value={newRoute.duration}
+                  onChange={(e) => setNewRoute({ ...newRoute, duration: e.target.value })}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                  required
+                  placeholder="e.g., 3h"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Price</label>
+                <input
+                  type="number"
+                  value={newRoute.price}
+                  onChange={(e) => setNewRoute({ ...newRoute, price: e.target.value })}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Departure Time</label>
+                <input
+                  type="time"
+                  value={newRoute.departureTime}
+                  onChange={(e) => setNewRoute({ ...newRoute, departureTime: e.target.value })}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                  required
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddRoute(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-sm font-medium text-white bg-accent rounded-md hover:bg-accent-hover"
+                >
+                  Add Route
+                </button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
 
         <div className="mt-8">
           <div className="relative">

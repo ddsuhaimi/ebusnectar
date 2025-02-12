@@ -2,10 +2,11 @@
 import { UserProfile } from "@/types";
 import { useState } from "react";
 import { UserCircle, Phone, Mail, Building2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Profile = () => {
-  // Mock user profile data
-  const [profile] = useState<UserProfile>({
+  const [isEditing, setIsEditing] = useState(false);
+  const [profile, setProfile] = useState<UserProfile>({
     id: "1",
     name: "John Doe",
     email: "john.doe@ebusid.com",
@@ -13,6 +14,13 @@ const Profile = () => {
     company: "TransJakarta Express",
     phoneNumber: "+62 812-3456-7890",
   });
+  const [editForm, setEditForm] = useState(profile);
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    setProfile(editForm);
+    setIsEditing(false);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -61,12 +69,80 @@ const Profile = () => {
             </div>
 
             <div className="mt-8">
-              <button className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors">
+              <button
+                onClick={() => setIsEditing(true)}
+                className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
+              >
                 Edit Profile
               </button>
             </div>
           </div>
         </div>
+
+        <Dialog open={isEditing} onOpenChange={setIsEditing}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Profile</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSave} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Name</label>
+                <input
+                  type="text"
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <input
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input
+                  type="tel"
+                  value={editForm.phoneNumber}
+                  onChange={(e) => setEditForm({ ...editForm, phoneNumber: e.target.value })}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Company</label>
+                <input
+                  type="text"
+                  value={editForm.company}
+                  onChange={(e) => setEditForm({ ...editForm, company: e.target.value })}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  required
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-sm font-medium text-white bg-accent rounded-md hover:bg-accent-hover"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

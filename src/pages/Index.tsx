@@ -1,5 +1,6 @@
 
 import { Activity, Users, Bus, CreditCard } from "lucide-react";
+import { Booking } from "@/types";
 
 const Index = () => {
   const stats = [
@@ -26,6 +27,34 @@ const Index = () => {
       value: "$12.4k",
       change: "+8.9%",
       icon: CreditCard,
+    },
+  ];
+
+  // Mock recent bookings data
+  const recentBookings: Booking[] = [
+    {
+      id: "1",
+      passengerName: "Sarah Johnson",
+      route: "Jakarta - Bandung",
+      date: "2024-02-20",
+      status: "completed",
+      amount: 150000,
+    },
+    {
+      id: "2",
+      passengerName: "Michael Chen",
+      route: "Surabaya - Malang",
+      date: "2024-02-19",
+      status: "pending",
+      amount: 125000,
+    },
+    {
+      id: "3",
+      passengerName: "Amanda Wong",
+      route: "Jakarta - Semarang",
+      date: "2024-02-18",
+      status: "cancelled",
+      amount: 175000,
     },
   ];
 
@@ -71,13 +100,60 @@ const Index = () => {
 
         <div className="mt-8">
           <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">
-              Recent Bookings
-            </h2>
-            <div className="border-t border-gray-200">
-              <div className="py-4 text-sm text-gray-500 text-center">
-                No recent bookings to display
-              </div>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Recent Bookings</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Passenger
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Route
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {recentBookings.map((booking) => (
+                    <tr key={booking.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {booking.passengerName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {booking.route}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {booking.date}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            booking.status === "completed"
+                              ? "bg-green-100 text-green-800"
+                              : booking.status === "pending"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {booking.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        Rp {booking.amount.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

@@ -1,10 +1,17 @@
-
 import type { Fleet as FleetType } from "@/types";
-import { Plus, Search, Bus } from "lucide-react";
+import { Plus, Search, Bus, MapPin } from "lucide-react";
 import { useState } from "react";
 
 const Fleet = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAddBus, setShowAddBus] = useState(false);
+  const [showAssignRoute, setShowAssignRoute] = useState(false);
+  const [selectedBus, setSelectedBus] = useState<FleetType | null>(null);
+  const [newBus, setNewBus] = useState({
+    busNumber: "",
+    model: "",
+    capacity: "",
+  });
 
   // Mock fleet data
   const fleetData: FleetType[] = [
@@ -15,6 +22,7 @@ const Fleet = () => {
       capacity: 45,
       status: "active",
       lastService: "2024-02-15",
+      assignedRoutes: ["Jakarta - Bandung"],
     },
     {
       id: "2",
@@ -34,6 +42,19 @@ const Fleet = () => {
     },
   ];
 
+  const handleAddBus = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Adding new bus:", newBus);
+    setShowAddBus(false);
+    setNewBus({ busNumber: "", model: "", capacity: "" });
+  };
+
+  const handleAssignRoute = (busId: string) => {
+    const bus = fleetData.find((b) => b.id === busId);
+    setSelectedBus(bus || null);
+    setShowAssignRoute(true);
+  };
+
   const filteredFleet = fleetData.filter((bus) =>
     bus.busNumber.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -48,11 +69,110 @@ const Fleet = () => {
               Manage your bus fleet and track maintenance schedules
             </p>
           </div>
-          <button className="flex items-center px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors">
+          <button
+            onClick={() => setShowAddBus(true)}
+            className="flex items-center px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
+          >
             <Plus className="w-5 h-5 mr-2" />
             Add New Bus
           </button>
         </div>
+
+        {showAddBus && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <h2 className="text-xl font-semibold mb-4">Add New Bus</h2>
+              <form onSubmit={handleAddBus} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Bus Number
+                  </label>
+                  <input
+                    type="text"
+                    value={newBus.busNumber}
+                    onChange={(e) =>
+                      setNewBus({ ...newBus, busNumber: e.target.value })
+                    }
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Model
+                  </label>
+                  <input
+                    type="text"
+                    value={newBus.model}
+                    onChange={(e) =>
+                      setNewBus({ ...newBus, model: e.target.value })
+                    }
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Capacity
+                  </label>
+                  <input
+                    type="number"
+                    value={newBus.capacity}
+                    onChange={(e) =>
+                      setNewBus({ ...newBus, capacity: e.target.value })
+                    }
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                    required
+                  />
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddBus(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 text-sm font-medium text-white bg-accent hover:bg-accent-hover rounded-md"
+                  >
+                    Add Bus
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {showAssignRoute && selectedBus && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <h2 className="text-xl font-semibold mb-4">
+                Assign Route to {selectedBus.busNumber}
+              </h2>
+              <div className="space-y-4">
+                <select className="block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                  <option value="">Select a route</option>
+                  <option value="jakarta-bandung">Jakarta - Bandung</option>
+                  <option value="jakarta-semarang">Jakarta - Semarang</option>
+                  <option value="surabaya-malang">Surabaya - Malang</option>
+                </select>
+                <div className="flex justify-end space-x-2">
+                  <button
+                    onClick={() => setShowAssignRoute(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md"
+                  >
+                    Cancel
+                  </button>
+                  <button className="px-4 py-2 text-sm font-medium text-white bg-accent hover:bg-accent-hover rounded-md">
+                    Assign Route
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="mt-8">
           <div className="relative">
@@ -97,7 +217,24 @@ const Fleet = () => {
                     <span className="text-gray-500">Last Service:</span>
                     <span className="text-gray-900">{bus.lastService}</span>
                   </div>
+                  {bus.assignedRoutes && bus.assignedRoutes.length > 0 && (
+                    <div className="text-sm text-gray-500">
+                      <div className="font-medium">Assigned Routes:</div>
+                      {bus.assignedRoutes.map((route, index) => (
+                        <div key={index} className="flex items-center mt-1">
+                          <MapPin className="w-4 h-4 mr-1" />
+                          {route}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+                <button
+                  onClick={() => handleAssignRoute(bus.id)}
+                  className="mt-4 w-full px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
+                >
+                  Assign Route
+                </button>
               </div>
             ))}
           </div>

@@ -15,6 +15,7 @@ export interface Fleet {
   capacity: number;
   status: "active" | "maintenance" | "inactive";
   lastService: string;
+  assignedRoutes?: string[];
 }
 
 export interface UserProfile {

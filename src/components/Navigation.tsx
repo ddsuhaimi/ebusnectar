@@ -1,14 +1,16 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Bus, UserCircle, BarChart3, Settings, LogOut } from "lucide-react";
+import { Menu, X, Bus, UserCircle, BarChart3, Settings, LogOut, CalendarDays, MapPin } from "lucide-react";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { name: "Dashboard", icon: BarChart3, path: "/dashboard" },
+    { name: "Dashboard", icon: BarChart3, path: "/" },
     { name: "Fleet", icon: Bus, path: "/fleet" },
+    { name: "Routes", icon: MapPin, path: "/routes" },
+    { name: "Bookings", icon: CalendarDays, path: "/bookings" },
     { name: "Profile", icon: UserCircle, path: "/profile" },
     { name: "Settings", icon: Settings, path: "/settings" },
   ];

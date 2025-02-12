@@ -1,5 +1,5 @@
 
-import { Fleet } from "@/types";
+import type { Fleet as FleetType } from "@/types";
 import { Plus, Search, Bus } from "lucide-react";
 import { useState } from "react";
 
@@ -7,7 +7,7 @@ const Fleet = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Mock fleet data
-  const fleetData: Fleet[] = [
+  const fleetData: FleetType[] = [
     {
       id: "1",
       busNumber: "BUS-001",

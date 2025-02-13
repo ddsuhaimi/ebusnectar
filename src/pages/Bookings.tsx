@@ -1,13 +1,15 @@
-
 import { useState } from "react";
 import { Search, Filter, Download, Calendar } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { Booking, ScheduledTrip } from "@/types";
 
 const Bookings = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedTrip, setSelectedTrip] = useState<ScheduledTrip | null>(null);
+  const [showTripDetails, setShowTripDetails] = useState(false);
 
-  // Mock bookings and scheduled trips data
+  // Mock bookings data
   const bookingsData: Booking[] = [
     {
       id: "1",
@@ -29,6 +31,7 @@ const Bookings = () => {
     },
   ];
 
+  // Mock scheduled trips data with multiple trips per day
   const scheduledTrips: ScheduledTrip[] = [
     {
       id: "1",
@@ -52,7 +55,50 @@ const Bookings = () => {
       date: new Date().toISOString().split("T")[0],
       availableSeats: 30,
     },
-    // Add more scheduled trips
+    {
+      id: "2",
+      route: {
+        id: "2",
+        from: "Jakarta",
+        to: "Bandung",
+        duration: "3h",
+        price: 150000,
+        departureTime: "10:00",
+        status: "active",
+      },
+      bus: {
+        id: "2",
+        busNumber: "BUS-002",
+        model: "Volvo B11R",
+        capacity: 50,
+        status: "active",
+        lastService: "2024-02-15",
+      },
+      date: new Date().toISOString().split("T")[0],
+      availableSeats: 25,
+    },
+    {
+      id: "3",
+      route: {
+        id: "3",
+        from: "Jakarta",
+        to: "Bandung",
+        duration: "3h",
+        price: 150000,
+        departureTime: "14:00",
+        status: "active",
+      },
+      bus: {
+        id: "3",
+        busNumber: "BUS-003",
+        model: "Scania K410iB",
+        capacity: 48,
+        status: "active",
+        lastService: "2024-02-15",
+      },
+      date: new Date(Date.now() + 86400000).toISOString().split("T")[0],
+      availableSeats: 48,
+    },
   ];
 
   const today = new Date().toISOString().split("T")[0];
@@ -60,6 +106,23 @@ const Bookings = () => {
 
   const todayTrips = scheduledTrips.filter(trip => trip.date === today);
   const tomorrowTrips = scheduledTrips.filter(trip => trip.date === tomorrow);
+
+  // Get bookings for a specific trip
+  const getTripBookings = (tripId: string) => {
+    // In a real app, this would filter bookings by trip ID
+    // For now, we'll return mock data
+    return [
+      { id: "1", passengerName: "Sarah Johnson", seatNumber: "12A" },
+      { id: "2", passengerName: "Michael Chen", seatNumber: "15B" },
+      { id: "3", passengerName: "Emma Wilson", seatNumber: "03A" },
+      { id: "4", passengerName: "James Brown", seatNumber: "08C" },
+    ].sort((a, b) => a.seatNumber.localeCompare(b.seatNumber));
+  };
+
+  const handleTripClick = (trip: ScheduledTrip) => {
+    setSelectedTrip(trip);
+    setShowTripDetails(true);
+  };
 
   const filteredBookings = bookingsData.filter(
     (booking) =>
@@ -96,7 +159,11 @@ const Bookings = () => {
               </h3>
               <div className="space-y-4">
                 {todayTrips.map((trip) => (
-                  <div key={trip.id} className="border-b pb-4">
+                  <div 
+                    key={trip.id} 
+                    className="border-b pb-4 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
+                    onClick={() => handleTripClick(trip)}
+                  >
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="font-medium">{trip.route.from} → {trip.route.to}</p>
@@ -123,7 +190,11 @@ const Bookings = () => {
               </h3>
               <div className="space-y-4">
                 {tomorrowTrips.map((trip) => (
-                  <div key={trip.id} className="border-b pb-4">
+                  <div 
+                    key={trip.id} 
+                    className="border-b pb-4 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
+                    onClick={() => handleTripClick(trip)}
+                  >
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="font-medium">{trip.route.from} → {trip.route.to}</p>
@@ -143,6 +214,67 @@ const Bookings = () => {
             </div>
           </div>
         </div>
+
+        {/* Trip Details Dialog */}
+        <Dialog open={showTripDetails} onOpenChange={setShowTripDetails}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Trip Details</DialogTitle>
+            </DialogHeader>
+            {selectedTrip && (
+              <div className="mt-4">
+                <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-500">Route</p>
+                      <p className="font-medium">{selectedTrip.route.from} → {selectedTrip.route.to}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Time</p>
+                      <p className="font-medium">{selectedTrip.route.departureTime}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Bus</p>
+                      <p className="font-medium">{selectedTrip.bus.busNumber}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Available Seats</p>
+                      <p className="font-medium">{selectedTrip.availableSeats}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <h4 className="font-medium mb-2">Passenger List</h4>
+                <div className="overflow-hidden border border-gray-200 rounded-lg">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Seat
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Passenger
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {getTripBookings(selectedTrip.id).map((booking) => (
+                        <tr key={booking.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-accent">
+                            {booking.seatNumber}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {booking.passengerName}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         {/* Bookings Table */}
         <div className="mt-8">

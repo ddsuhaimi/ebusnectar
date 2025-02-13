@@ -137,6 +137,31 @@ const Bookings = () => {
     setShowStatusChange(false);
   };
 
+  const handleExportTrip = (trip: ScheduledTrip) => {
+    const tripData = {
+      ...trip,
+      passengers: getTripBookings(trip.id)
+    };
+    
+    const dataStr = JSON.stringify(tripData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `trip-${trip.id}-${trip.date}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
+  const [selectedBookingDetails, setSelectedBookingDetails] = useState<Booking | null>(null);
+  const [showBookingDetails, setShowBookingDetails] = useState(false);
+
+  const handleViewBookingDetails = (booking: Booking) => {
+    setSelectedBookingDetails(booking);
+    setShowBookingDetails(true);
+  };
+
   const filteredBookings = bookingsData.filter(
     (booking) =>
       (statusFilter === "all" || booking.status === statusFilter) &&
@@ -147,7 +172,7 @@ const Bookings = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="animate-fade-up">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900">Bookings</h1>
             <p className="mt-2 text-sm text-gray-600">
@@ -163,7 +188,7 @@ const Bookings = () => {
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-4">Scheduled Trips</h2>
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
               <h3 className="text-lg font-medium mb-4 flex items-center">
                 <Calendar className="w-5 h-5 mr-2" />
                 Today's Trips
@@ -172,28 +197,39 @@ const Bookings = () => {
                 {todayTrips.map((trip) => (
                   <div 
                     key={trip.id} 
-                    className="border-b pb-4 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
-                    onClick={() => handleTripClick(trip)}
+                    className="border-b pb-4 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors relative"
                   >
-                    <div className="flex justify-between items-center">
+                    <div 
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center"
+                      onClick={() => handleTripClick(trip)}
+                    >
                       <div>
                         <p className="font-medium">{trip.route.from} → {trip.route.to}</p>
                         <p className="text-sm text-gray-500">
                           Bus: {trip.bus.busNumber} | Time: {trip.route.departureTime}
                         </p>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right mt-2 sm:mt-0">
                         <p className="text-sm font-medium text-green-600">
                           {trip.availableSeats} seats available
                         </p>
                       </div>
                     </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleExportTrip(trip);
+                      }}
+                      className="absolute top-3 right-3 p-2 text-gray-400 hover:text-accent"
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
               <h3 className="text-lg font-medium mb-4 flex items-center">
                 <Calendar className="w-5 h-5 mr-2" />
                 Tomorrow's Trips
@@ -202,26 +238,132 @@ const Bookings = () => {
                 {tomorrowTrips.map((trip) => (
                   <div 
                     key={trip.id} 
-                    className="border-b pb-4 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
-                    onClick={() => handleTripClick(trip)}
+                    className="border-b pb-4 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors relative"
                   >
-                    <div className="flex justify-between items-center">
+                    <div 
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center"
+                      onClick={() => handleTripClick(trip)}
+                    >
                       <div>
                         <p className="font-medium">{trip.route.from} → {trip.route.to}</p>
                         <p className="text-sm text-gray-500">
                           Bus: {trip.bus.busNumber} | Time: {trip.route.departureTime}
                         </p>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right mt-2 sm:mt-0">
                         <p className="text-sm font-medium text-green-600">
                           {trip.availableSeats} seats available
                         </p>
                       </div>
                     </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleExportTrip(trip);
+                      }}
+                      className="absolute top-3 right-3 p-2 text-gray-400 hover:text-accent"
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                placeholder="Search bookings..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Search className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
+            </div>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-accent"
+            >
+              <option value="all">All Status</option>
+              <option value="completed">Completed</option>
+              <option value="pending">Pending</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+
+          <div className="bg-white shadow rounded-lg overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Passenger
+                  </th>
+                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Route
+                  </th>
+                  <th className="hidden sm:table-cell px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th className="hidden sm:table-cell px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Seat
+                  </th>
+                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="hidden sm:table-cell px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Amount
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredBookings.map((booking) => (
+                  <tr 
+                    key={booking.id} 
+                    className="hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleViewBookingDetails(booking)}
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {booking.passengerName}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {booking.route}
+                    </td>
+                    <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {booking.date}
+                    </td>
+                    <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-accent">
+                      {booking.seatNumber}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleStatusChange(booking);
+                        }}
+                        className={cn(
+                          "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
+                          {
+                            "bg-green-100 text-green-800": booking.status === "completed",
+                            "bg-yellow-100 text-yellow-800": booking.status === "pending",
+                            "bg-red-100 text-red-800": booking.status === "cancelled"
+                          }
+                        )}
+                      >
+                        {booking.status}
+                      </button>
+                    </td>
+                    <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      Rp {booking.amount.toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -285,94 +427,52 @@ const Bookings = () => {
           </DialogContent>
         </Dialog>
 
-        <div className="mt-8">
-          <div className="flex gap-4 mb-6">
-            <div className="flex-1 relative">
-              <input
-                type="text"
-                placeholder="Search bookings..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Search className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
-            </div>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-accent"
-            >
-              <option value="all">All Status</option>
-              <option value="completed">Completed</option>
-              <option value="pending">Pending</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
-          </div>
-
-          <div className="bg-white shadow rounded-lg overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Passenger
-                  </th>
-                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Route
-                  </th>
-                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Seat
-                  </th>
-                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Amount
-                  </th>
-                  <th className="px-6 py-3 bg-gray-50"></th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredBookings.map((booking) => (
-                  <tr key={booking.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {booking.passengerName}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {booking.route}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {booking.date}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-accent">
-                      {booking.seatNumber}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button
-                        onClick={() => handleStatusChange(booking)}
-                        className={cn(
-                          "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
-                          {
-                            "bg-green-100 text-green-800": booking.status === "completed",
-                            "bg-yellow-100 text-yellow-800": booking.status === "pending",
-                            "bg-red-100 text-red-800": booking.status === "cancelled"
-                          }
-                        )}
-                      >
-                        {booking.status}
-                      </button>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      Rp {booking.amount.toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <Dialog open={showBookingDetails} onOpenChange={setShowBookingDetails}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Booking Details</DialogTitle>
+            </DialogHeader>
+            {selectedBookingDetails && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm text-gray-500">Passenger Name</label>
+                    <p className="font-medium">{selectedBookingDetails.passengerName}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500">Route</label>
+                    <p className="font-medium">{selectedBookingDetails.route}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500">Date</label>
+                    <p className="font-medium">{selectedBookingDetails.date}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500">Seat Number</label>
+                    <p className="font-medium">{selectedBookingDetails.seatNumber}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500">Status</label>
+                    <p className={cn(
+                      "inline-flex px-2 py-1 rounded-full text-sm font-medium",
+                      {
+                        "bg-green-100 text-green-800": selectedBookingDetails.status === "completed",
+                        "bg-yellow-100 text-yellow-800": selectedBookingDetails.status === "pending",
+                        "bg-red-100 text-red-800": selectedBookingDetails.status === "cancelled"
+                      }
+                    )}>
+                      {selectedBookingDetails.status}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500">Amount</label>
+                    <p className="font-medium">Rp {selectedBookingDetails.amount.toLocaleString()}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         <Dialog open={showStatusChange} onOpenChange={setShowStatusChange}>
           <DialogContent>

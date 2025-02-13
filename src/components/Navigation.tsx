@@ -11,13 +11,22 @@ import {
   LogOut,
   Menu
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Navigation = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(!isMobile);
+
+  // Automatically collapse sidebar on mobile
+  useEffect(() => {
+    if (isMobile) {
+      setIsOpen(false);
+    } else {
+      setIsOpen(true);
+    }
+  }, [isMobile]);
 
   const mainMenuItems = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/" },
@@ -53,18 +62,32 @@ const Navigation = () => {
 
   return (
     <>
+      {/* Mobile Menu Button - Now in top right */}
       {isMobile && (
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed top-4 left-4 z-50 p-2 bg-background rounded-lg shadow-lg"
+          className="fixed top-4 right-4 z-50 p-2 bg-background rounded-lg shadow-lg hover:bg-accent/10 transition-colors"
+          aria-label="Toggle menu"
         >
           <Menu className="h-5 w-5" />
         </button>
       )}
+      
+      {/* Mobile Overlay */}
+      {isMobile && isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar Navigation */}
       <div className={cn(
         "fixed md:relative z-40 h-full bg-background transition-all duration-300",
         isOpen ? "w-64" : "w-16",
-        !isOpen && isMobile && "-translate-x-full",
+        isMobile ? (
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        ) : "translate-x-0",
         "border-r flex flex-col"
       )}>
         {/* Logo */}

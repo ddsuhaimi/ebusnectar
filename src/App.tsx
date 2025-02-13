@@ -23,21 +23,32 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <BrowserRouter>
+          <div className="min-h-screen">
+            {shouldShowNav ? (
+              <div className="flex h-screen overflow-hidden">
+                <Navigation />
+                <main className="flex-1 overflow-y-auto">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/fleet" element={<Fleet />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/bookings" element={<Bookings />} />
+                    <Route path="/routes" element={<RoutesPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+              </div>
+            ) : (
+              <Routes>
+                <Route path="/login" element={<Login />} />
+              </Routes>
+            )}
+          </div>
+        </BrowserRouter>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          {shouldShowNav && <Navigation />}
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Index />} />
-            <Route path="/fleet" element={<Fleet />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/bookings" element={<Bookings />} />
-            <Route path="/routes" element={<RoutesPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );

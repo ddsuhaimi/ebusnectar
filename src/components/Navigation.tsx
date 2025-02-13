@@ -1,88 +1,95 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X, Bus, UserCircle, BarChart3, Settings, LogOut, CalendarDays, MapPin } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { 
+  LayoutDashboard, 
+  CalendarDays, 
+  Bus, 
+  MapPin, 
+  UserCircle, 
+  Settings, 
+  LogOut 
+} from "lucide-react";
 
 const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
-  const menuItems = [
-    { name: "Dashboard", icon: BarChart3, path: "/" },
+  const mainMenuItems = [
+    { name: "Dashboard", icon: LayoutDashboard, path: "/" },
+    { name: "Bookings", icon: CalendarDays, path: "/bookings" },
+  ];
+
+  const backOfficeItems = [
     { name: "Fleet", icon: Bus, path: "/fleet" },
     { name: "Routes", icon: MapPin, path: "/routes" },
-    { name: "Bookings", icon: CalendarDays, path: "/bookings" },
     { name: "Profile", icon: UserCircle, path: "/profile" },
     { name: "Settings", icon: Settings, path: "/settings" },
   ];
 
+  const NavItem = ({ item }: { item: { name: string; icon: any; path: string } }) => {
+    const isActive = location.pathname === item.path;
+    const Icon = item.icon;
+
+    return (
+      <Link
+        to={item.path}
+        className={cn(
+          "flex items-center gap-x-3 px-3 py-2 text-sm rounded-lg transition-colors",
+          isActive 
+            ? "bg-accent text-accent-foreground" 
+            : "text-muted-foreground hover:bg-accent/10 hover:text-accent"
+        )}
+      >
+        <Icon className="h-4 w-4" />
+        {item.name}
+      </Link>
+    );
+  };
+
   return (
-    <nav className="bg-white border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="text-2xl font-bold text-accent">
-                EBusID
-              </Link>
-            </div>
-          </div>
+    <div className="w-64 border-r bg-background flex flex-col">
+      {/* Logo */}
+      <div className="p-6">
+        <Link to="/" className="text-2xl font-bold text-accent">
+          EBusID
+        </Link>
+      </div>
 
-          {/* Desktop menu */}
-          <div className="hidden sm:flex sm:items-center sm:ml-6 space-x-8">
-            {menuItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                className="flex items-center text-gray-600 hover:text-accent transition-colors duration-200"
-              >
-                <item.icon className="w-5 h-5 mr-2" />
-                {item.name}
-              </Link>
+      {/* Navigation */}
+      <div className="flex-1 px-3 py-2 space-y-6">
+        {/* Main Menu */}
+        <div>
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+            Main
+          </h2>
+          <div className="space-y-1">
+            {mainMenuItems.map((item) => (
+              <NavItem key={item.name} item={item} />
             ))}
-            <button className="flex items-center text-gray-600 hover:text-accent transition-colors duration-200">
-              <LogOut className="w-5 h-5 mr-2" />
-              Logout
-            </button>
           </div>
+        </div>
 
-          {/* Mobile menu button */}
-          <div className="sm:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-600 hover:text-accent focus:outline-none"
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+        {/* Back Office */}
+        <div>
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+            Back Office
+          </h2>
+          <div className="space-y-1">
+            {backOfficeItems.map((item) => (
+              <NavItem key={item.name} item={item} />
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {isOpen && (
-        <div className="sm:hidden animate-fade-down">
-          <div className="pt-2 pb-3 space-y-1">
-            {menuItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                className="flex items-center text-gray-600 hover:text-accent px-4 py-2 transition-colors duration-200"
-                onClick={() => setIsOpen(false)}
-              >
-                <item.icon className="w-5 h-5 mr-2" />
-                {item.name}
-              </Link>
-            ))}
-            <button 
-              className="flex items-center text-gray-600 hover:text-accent px-4 py-2 w-full transition-colors duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              <LogOut className="w-5 h-5 mr-2" />
-              Logout
-            </button>
-          </div>
-        </div>
-      )}
-    </nav>
+      {/* Logout */}
+      <div className="border-t p-3">
+        <button className="flex w-full items-center gap-x-3 px-3 py-2 text-sm text-muted-foreground rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
+          <LogOut className="h-4 w-4" />
+          Logout
+        </button>
+      </div>
+    </div>
   );
 };
 

@@ -8,9 +8,11 @@ const Bookings = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedTrip, setSelectedTrip] = useState<ScheduledTrip | null>(null);
   const [showTripDetails, setShowTripDetails] = useState(false);
+  const [showStatusChange, setShowStatusChange] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [newStatus, setNewStatus] = useState<"completed" | "pending" | "cancelled">("pending");
 
-  // Mock bookings data
-  const bookingsData: Booking[] = [
+  const [bookingsData, setBookingsData] = useState<Booking[]>([
     {
       id: "1",
       passengerName: "Sarah Johnson",
@@ -29,10 +31,9 @@ const Bookings = () => {
       amount: 100000,
       seatNumber: "15B",
     },
-  ];
+  ]);
 
-  // Mock scheduled trips data with multiple trips per day
-  const scheduledTrips: ScheduledTrip[] = [
+  const [scheduledTrips, setScheduledTrips] = useState<ScheduledTrip[]>([
     {
       id: "1",
       route: {
@@ -99,7 +100,7 @@ const Bookings = () => {
       date: new Date(Date.now() + 86400000).toISOString().split("T")[0],
       availableSeats: 48,
     },
-  ];
+  ]);
 
   const today = new Date().toISOString().split("T")[0];
   const tomorrow = new Date(Date.now() + 86400000).toISOString().split("T")[0];
@@ -107,10 +108,7 @@ const Bookings = () => {
   const todayTrips = scheduledTrips.filter(trip => trip.date === today);
   const tomorrowTrips = scheduledTrips.filter(trip => trip.date === tomorrow);
 
-  // Get bookings for a specific trip
   const getTripBookings = (tripId: string) => {
-    // In a real app, this would filter bookings by trip ID
-    // For now, we'll return mock data
     return [
       { id: "1", passengerName: "Sarah Johnson", seatNumber: "12A" },
       { id: "2", passengerName: "Michael Chen", seatNumber: "15B" },
@@ -122,6 +120,20 @@ const Bookings = () => {
   const handleTripClick = (trip: ScheduledTrip) => {
     setSelectedTrip(trip);
     setShowTripDetails(true);
+  };
+
+  const handleStatusChange = (booking: Booking) => {
+    setSelectedBooking(booking);
+    setNewStatus(booking.status);
+    setShowStatusChange(true);
+  };
+
+  const updateBookingStatus = () => {
+    if (!selectedBooking) return;
+    
+    console.log(`Updating booking ${selectedBooking.id} status to ${newStatus}`);
+    
+    setShowStatusChange(false);
   };
 
   const filteredBookings = bookingsData.filter(
@@ -147,11 +159,9 @@ const Bookings = () => {
           </button>
         </div>
 
-        {/* Scheduled Trips Section */}
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-4">Scheduled Trips</h2>
           <div className="grid gap-6 md:grid-cols-2">
-            {/* Today's Trips */}
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-lg font-medium mb-4 flex items-center">
                 <Calendar className="w-5 h-5 mr-2" />
@@ -182,7 +192,6 @@ const Bookings = () => {
               </div>
             </div>
 
-            {/* Tomorrow's Trips */}
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-lg font-medium mb-4 flex items-center">
                 <Calendar className="w-5 h-5 mr-2" />
@@ -215,7 +224,6 @@ const Bookings = () => {
           </div>
         </div>
 
-        {/* Trip Details Dialog */}
         <Dialog open={showTripDetails} onOpenChange={setShowTripDetails}>
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
@@ -276,7 +284,6 @@ const Bookings = () => {
           </DialogContent>
         </Dialog>
 
-        {/* Bookings Table */}
         <div className="mt-8">
           <div className="flex gap-4 mb-6">
             <div className="flex-1 relative">
@@ -323,6 +330,7 @@ const Bookings = () => {
                   <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Amount
                   </th>
+                  <th className="px-6 py-3 bg-gray-50"></th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -341,17 +349,19 @@ const Bookings = () => {
                       {booking.seatNumber}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          booking.status === "completed"
-                            ? "bg-green-100 text-green-800"
-                            : booking.status === "pending"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
+                      <button
+                        onClick={() => handleStatusChange(booking)}
+                        className={cn(
+                          "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
+                          {
+                            "bg-green-100 text-green-800": booking.status === "completed",
+                            "bg-yellow-100 text-yellow-800": booking.status === "pending",
+                            "bg-red-100 text-red-800": booking.status === "cancelled"
+                          }
+                        )}
                       >
                         {booking.status}
-                      </span>
+                      </button>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       Rp {booking.amount.toLocaleString()}
@@ -362,6 +372,44 @@ const Bookings = () => {
             </table>
           </div>
         </div>
+
+        <Dialog open={showStatusChange} onOpenChange={setShowStatusChange}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Change Booking Status</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Status
+                </label>
+                <select
+                  value={newStatus}
+                  onChange={(e) => setNewStatus(e.target.value as "completed" | "pending" | "cancelled")}
+                  className="block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                >
+                  <option value="completed">Completed</option>
+                  <option value="pending">Pending</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  onClick={() => setShowStatusChange(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={updateBookingStatus}
+                  className="px-4 py-2 text-sm font-medium text-white bg-accent hover:bg-accent-hover rounded-md"
+                >
+                  Update Status
+                </button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

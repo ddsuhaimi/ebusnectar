@@ -117,10 +117,10 @@ const Bookings = () => {
 
   const getTripBookings = (tripId: string) => {
     return [
-      { id: "1", passengerName: "Sarah Johnson", seatNumber: "12A" },
-      { id: "2", passengerName: "Michael Chen", seatNumber: "15B" },
-      { id: "3", passengerName: "Emma Wilson", seatNumber: "03A" },
-      { id: "4", passengerName: "James Brown", seatNumber: "08C" },
+      { id: "1", passengerName: "Sarah Johnson", phoneNumber: "+62812345678", seatNumber: "12A" },
+      { id: "2", passengerName: "Michael Chen", phoneNumber: "+62823456789", seatNumber: "15B" },
+      { id: "3", passengerName: "Emma Wilson", phoneNumber: "+62834567890", seatNumber: "03A" },
+      { id: "4", passengerName: "James Brown", phoneNumber: "+62845678901", seatNumber: "08C" },
     ].sort((a, b) => a.seatNumber.localeCompare(b.seatNumber));
   };
 

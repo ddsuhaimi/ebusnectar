@@ -35,6 +35,7 @@ const Index = () => {
     {
       id: "1",
       passengerName: "Sarah Johnson",
+      phoneNumber: "+62812345678",
       route: "Jakarta - Bandung",
       date: "2024-02-20",
       status: "completed",
@@ -43,6 +44,7 @@ const Index = () => {
     {
       id: "2",
       passengerName: "Michael Chen",
+      phoneNumber: "+62823456789",
       route: "Surabaya - Malang",
       date: "2024-02-19",
       status: "pending",
@@ -51,6 +53,7 @@ const Index = () => {
     {
       id: "3",
       passengerName: "Amanda Wong",
+      phoneNumber: "+62834567890",
       route: "Jakarta - Semarang",
       date: "2024-02-18",
       status: "cancelled",

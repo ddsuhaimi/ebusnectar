@@ -1,5 +1,6 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 import { Download, Bus } from "lucide-react";
 import type { ScheduledTrip } from "@/types";
 

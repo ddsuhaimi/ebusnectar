@@ -29,15 +29,15 @@ const Navigation = () => {
   }, [isMobile]);
 
   const mainMenuItems = [
-    { name: "Dashboard", icon: LayoutDashboard, path: "/" },
-    { name: "Bookings", icon: CalendarDays, path: "/bookings" },
+    { name: "Dasbor", icon: LayoutDashboard, path: "/" },
+    { name: "Pemesanan", icon: CalendarDays, path: "/bookings" },
   ];
 
   const backOfficeItems = [
-    { name: "Fleet", icon: Bus, path: "/fleet" },
-    { name: "Routes", icon: MapPin, path: "/routes" },
-    { name: "Profile", icon: UserCircle, path: "/profile" },
-    { name: "Settings", icon: Settings, path: "/settings" },
+    { name: "Armada", icon: Bus, path: "/fleet" },
+    { name: "Rute", icon: MapPin, path: "/routes" },
+    { name: "Profil", icon: UserCircle, path: "/profile" },
+    { name: "Pengaturan", icon: Settings, path: "/settings" },
   ];
 
   const NavItem = ({ item }: { item: { name: string; icon: any; path: string } }) => {
@@ -102,7 +102,7 @@ const Navigation = () => {
           {/* Main Menu */}
           <div>
             <h2 className="mb-2 px-4 text-xs font-medium tracking-wider text-muted-foreground uppercase">
-              Main
+              Menu Utama
             </h2>
             <div className="space-y-1">
               {mainMenuItems.map((item) => (
@@ -114,7 +114,7 @@ const Navigation = () => {
           {/* Back Office */}
           <div>
             <h2 className="mb-2 px-4 text-xs font-medium tracking-wider text-muted-foreground uppercase">
-              Back Office
+              Kantor
             </h2>
             <div className="space-y-1">
               {backOfficeItems.map((item) => (
@@ -128,7 +128,7 @@ const Navigation = () => {
         <div className="border-t p-3">
           <button className="flex w-full items-center gap-x-3 px-3 py-2 text-sm text-muted-foreground rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
             <LogOut className="h-4 w-4" />
-            {isOpen && <span>Logout</span>}
+            {isOpen && <span>Keluar</span>}
           </button>
         </div>
       </div>

@@ -21,13 +21,13 @@ const Login = () => {
       <div className="max-w-md w-full space-y-8 animate-fade-up">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-bold text-gray-900">EBusID</h2>
-          <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
+          <p className="mt-2 text-sm text-gray-600">Masuk ke akun Anda</p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm space-y-4">
             <div>
               <label htmlFor="email" className="sr-only">
-                Email address
+                Alamat Email
               </label>
               <input
                 id="email"
@@ -35,7 +35,7 @@ const Login = () => {
                 type="email"
                 required
                 className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                placeholder="Alamat Email"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
@@ -44,7 +44,7 @@ const Login = () => {
             </div>
             <div className="relative">
               <label htmlFor="password" className="sr-only">
-                Password
+                Kata Sandi
               </label>
               <input
                 id="password"
@@ -52,7 +52,7 @@ const Login = () => {
                 type={showPassword ? "text" : "password"}
                 required
                 className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm pr-10"
-                placeholder="Password"
+                placeholder="Kata Sandi"
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
@@ -84,7 +84,7 @@ const Login = () => {
                 htmlFor="remember-me"
                 className="ml-2 block text-sm text-gray-900"
               >
-                Remember me
+                Ingat saya
               </label>
             </div>
 
@@ -93,7 +93,7 @@ const Login = () => {
                 href="#"
                 className="font-medium text-accent hover:text-accent-hover"
               >
-                Forgot your password?
+                Lupa kata sandi?
               </a>
             </div>
           </div>
@@ -106,18 +106,18 @@ const Login = () => {
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                 <LogIn className="h-5 w-5 text-accent-foreground" />
               </span>
-              Sign in
+              Masuk
             </button>
           </div>
         </form>
 
         <p className="mt-2 text-center text-sm text-gray-600">
-          Don't have an account?{" "}
+          Belum punya akun?{" "}
           <Link
             to="/register"
             className="font-medium text-accent hover:text-accent-hover"
           >
-            Register here
+            Daftar di sini
           </Link>
         </p>
       </div>

@@ -65,9 +65,9 @@ const Fleet = () => {
       <div className="animate-fade-up">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">Fleet Management</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">Manajemen Armada</h1>
             <p className="mt-2 text-sm text-gray-600">
-              Manage your bus fleet and track maintenance schedules
+              Kelola armada bus dan jadwal perawatan
             </p>
           </div>
           <button
@@ -75,7 +75,7 @@ const Fleet = () => {
             className="flex items-center px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
           >
             <Plus className="w-5 h-5 mr-2" />
-            Add New Bus
+            Tambah Bus
           </button>
         </div>
 
@@ -83,7 +83,7 @@ const Fleet = () => {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search buses..."
+              placeholder="Cari bus..."
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -114,25 +114,26 @@ const Fleet = () => {
                         : "bg-red-100 text-red-800"
                     }`}
                   >
-                    {bus.status}
+                    {bus.status === "active" ? "Aktif" : 
+                     bus.status === "maintenance" ? "Perawatan" : "Tidak Aktif"}
                   </span>
                 </div>
 
                 <div className="flex-1 space-y-4">
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Capacity:</span>
-                      <span className="text-gray-900">{bus.capacity} seats</span>
+                      <span className="text-gray-500">Kapasitas:</span>
+                      <span className="text-gray-900">{bus.capacity} kursi</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Last Service:</span>
+                      <span className="text-gray-500">Perawatan Terakhir:</span>
                       <span className="text-gray-900">{bus.lastService}</span>
                     </div>
                   </div>
 
                   {bus.assignedRoutes && bus.assignedRoutes.length > 0 && (
                     <div className="text-sm text-gray-500">
-                      <div className="font-medium mb-2">Assigned Routes:</div>
+                      <div className="font-medium mb-2">Rute yang Ditugaskan:</div>
                       {bus.assignedRoutes.map((route, index) => (
                         <div key={index} className="flex items-center mt-1">
                           <MapPin className="w-4 h-4 mr-1" />
@@ -147,7 +148,7 @@ const Fleet = () => {
                   onClick={() => handleAssignRoute(bus)}
                   className="mt-4 w-full px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
                 >
-                  Assign Route
+                  Tugaskan Rute
                 </button>
               </div>
             ))}
@@ -157,12 +158,12 @@ const Fleet = () => {
         <Dialog open={showAddBus} onOpenChange={setShowAddBus}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Add New Bus</DialogTitle>
+              <DialogTitle>Tambah Bus Baru</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleAddBus} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Bus Number
+                  Nomor Bus
                 </label>
                 <input
                   type="text"
@@ -190,7 +191,7 @@ const Fleet = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Capacity
+                  Kapasitas
                 </label>
                 <input
                   type="number"
@@ -208,13 +209,13 @@ const Fleet = () => {
                   onClick={() => setShowAddBus(false)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md"
                 >
-                  Cancel
+                  Batal
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 text-sm font-medium text-white bg-accent hover:bg-accent-hover rounded-md"
                 >
-                  Add Bus
+                  Tambah Bus
                 </button>
               </div>
             </form>
@@ -225,12 +226,12 @@ const Fleet = () => {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
-                Assign Route to {selectedBus?.busNumber}
+                Tugaskan Rute untuk {selectedBus?.busNumber}
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <select className="block w-full border border-gray-300 rounded-md shadow-sm p-2">
-                <option value="">Select a route</option>
+                <option value="">Pilih rute</option>
                 <option value="jakarta-bandung">Jakarta - Bandung</option>
                 <option value="jakarta-semarang">Jakarta - Semarang</option>
                 <option value="surabaya-malang">Surabaya - Malang</option>
@@ -240,10 +241,10 @@ const Fleet = () => {
                   onClick={() => setShowAssignRoute(false)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md"
                 >
-                  Cancel
+                  Batal
                 </button>
                 <button className="px-4 py-2 text-sm font-medium text-white bg-accent hover:bg-accent-hover rounded-md">
-                  Assign Route
+                  Tugaskan Rute
                 </button>
               </div>
             </div>

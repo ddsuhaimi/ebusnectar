@@ -25,9 +25,9 @@ const Profile = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-semibold text-gray-900">Profile</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Profil</h1>
         <p className="mt-2 text-sm text-gray-600">
-          Manage your account information and preferences
+          Kelola informasi dan preferensi akun Anda
         </p>
 
         <div className="mt-8 bg-white shadow rounded-lg">
@@ -54,7 +54,7 @@ const Profile = () => {
               <div className="flex items-center">
                 <Phone className="h-5 w-5 text-gray-400" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Phone Number</p>
+                  <p className="text-sm font-medium text-gray-500">Nomor Telepon</p>
                   <p className="text-sm text-gray-900">{profile.phoneNumber}</p>
                 </div>
               </div>
@@ -62,7 +62,7 @@ const Profile = () => {
               <div className="flex items-center">
                 <Building2 className="h-5 w-5 text-gray-400" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Company</p>
+                  <p className="text-sm font-medium text-gray-500">Perusahaan</p>
                   <p className="text-sm text-gray-900">{profile.company}</p>
                 </div>
               </div>
@@ -73,7 +73,7 @@ const Profile = () => {
                 onClick={() => setIsEditing(true)}
                 className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
               >
-                Edit Profile
+                Ubah Profil
               </button>
             </div>
           </div>
@@ -82,11 +82,11 @@ const Profile = () => {
         <Dialog open={isEditing} onOpenChange={setIsEditing}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Edit Profile</DialogTitle>
+              <DialogTitle>Ubah Profil</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
+                <label className="block text-sm font-medium text-gray-700">Nama</label>
                 <input
                   type="text"
                   value={editForm.name}
@@ -106,7 +106,7 @@ const Profile = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                <label className="block text-sm font-medium text-gray-700">Nomor Telepon</label>
                 <input
                   type="tel"
                   value={editForm.phoneNumber}
@@ -116,7 +116,7 @@ const Profile = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Company</label>
+                <label className="block text-sm font-medium text-gray-700">Perusahaan</label>
                 <input
                   type="text"
                   value={editForm.company}
@@ -131,13 +131,13 @@ const Profile = () => {
                   onClick={() => setIsEditing(false)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
                 >
-                  Cancel
+                  Batal
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 text-sm font-medium text-white bg-accent rounded-md hover:bg-accent-hover"
                 >
-                  Save Changes
+                  Simpan Perubahan
                 </button>
               </div>
             </form>

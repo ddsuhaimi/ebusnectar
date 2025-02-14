@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Plus, Search, MapPin } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -60,9 +61,9 @@ const Routes = () => {
       <div className="animate-fade-up">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">Routes</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">Rute</h1>
             <p className="mt-2 text-sm text-gray-600">
-              Manage bus routes and schedules
+              Kelola rute bus dan jadwal keberangkatan
             </p>
           </div>
           <button
@@ -70,18 +71,18 @@ const Routes = () => {
             className="flex items-center px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
           >
             <Plus className="w-5 h-5 mr-2" />
-            Add New Route
+            Tambah Rute
           </button>
         </div>
 
         <Dialog open={showAddRoute} onOpenChange={setShowAddRoute}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Add New Route</DialogTitle>
+              <DialogTitle>Tambah Rute Baru</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleAddRoute} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">From</label>
+                <label className="block text-sm font-medium text-gray-700">Dari</label>
                 <input
                   type="text"
                   value={newRoute.from}
@@ -91,7 +92,7 @@ const Routes = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">To</label>
+                <label className="block text-sm font-medium text-gray-700">Ke</label>
                 <input
                   type="text"
                   value={newRoute.to}
@@ -101,18 +102,18 @@ const Routes = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Duration</label>
+                <label className="block text-sm font-medium text-gray-700">Durasi</label>
                 <input
                   type="text"
                   value={newRoute.duration}
                   onChange={(e) => setNewRoute({ ...newRoute, duration: e.target.value })}
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                   required
-                  placeholder="e.g., 3h"
+                  placeholder="contoh: 3j"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Price</label>
+                <label className="block text-sm font-medium text-gray-700">Harga</label>
                 <input
                   type="number"
                   value={newRoute.price}
@@ -122,7 +123,7 @@ const Routes = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Departure Time</label>
+                <label className="block text-sm font-medium text-gray-700">Waktu Keberangkatan</label>
                 <input
                   type="time"
                   value={newRoute.departureTime}
@@ -137,13 +138,13 @@ const Routes = () => {
                   onClick={() => setShowAddRoute(false)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
                 >
-                  Cancel
+                  Batal
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 text-sm font-medium text-white bg-accent rounded-md hover:bg-accent-hover"
                 >
-                  Add Route
+                  Tambah Rute
                 </button>
               </div>
             </form>
@@ -154,7 +155,7 @@ const Routes = () => {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search routes..."
+              placeholder="Cari rute..."
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -177,7 +178,7 @@ const Routes = () => {
                         : "bg-red-100 text-red-800"
                     }`}
                   >
-                    {route.status}
+                    {route.status === "active" ? "Aktif" : "Tidak Aktif"}
                   </span>
                 </div>
                 <div className="mt-4">
@@ -192,15 +193,15 @@ const Routes = () => {
                   </div>
                   <div className="mt-4 space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Duration:</span>
+                      <span className="text-gray-500">Durasi:</span>
                       <span className="text-gray-900">{route.duration}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Departure:</span>
+                      <span className="text-gray-500">Keberangkatan:</span>
                       <span className="text-gray-900">{route.departureTime}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Price:</span>
+                      <span className="text-gray-500">Harga:</span>
                       <span className="text-gray-900">
                         Rp {route.price.toLocaleString()}
                       </span>

@@ -5,32 +5,31 @@ import { Booking } from "@/types";
 const Index = () => {
   const stats = [
     {
-      title: "Total Bookings",
+      title: "Total Pemesanan",
       value: "1,234",
       change: "+12.3%",
       icon: Activity,
     },
     {
-      title: "Active Users",
+      title: "Pengguna Aktif",
       value: "567",
       change: "+5.6%",
       icon: Users,
     },
     {
-      title: "Fleet Size",
+      title: "Jumlah Armada",
       value: "89",
       change: "+2.3%",
       icon: Bus,
     },
     {
-      title: "Revenue",
-      value: "$12.4k",
+      title: "Pendapatan",
+      value: "Rp 12,4jt",
       change: "+8.9%",
       icon: CreditCard,
     },
   ];
 
-  // Mock recent bookings data
   const recentBookings: Booking[] = [
     {
       id: "1",
@@ -64,9 +63,9 @@ const Index = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Dasbor</h1>
         <p className="mt-2 text-sm text-gray-600">
-          Welcome back! Here's what's happening with your bus company.
+          Selamat datang! Berikut adalah ringkasan aktivitas perusahaan bus Anda.
         </p>
 
         <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -103,25 +102,25 @@ const Index = () => {
 
         <div className="mt-8">
           <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Recent Bookings</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Pemesanan Terbaru</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Passenger
+                      Penumpang
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Route
+                      Rute
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
+                      Tanggal
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Amount
+                      Jumlah
                     </th>
                   </tr>
                 </thead>
@@ -147,7 +146,11 @@ const Index = () => {
                               : "bg-red-100 text-red-800"
                           }`}
                         >
-                          {booking.status}
+                          {booking.status === "completed"
+                            ? "Selesai"
+                            : booking.status === "pending"
+                            ? "Tertunda"
+                            : "Dibatalkan"}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

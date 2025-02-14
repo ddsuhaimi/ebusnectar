@@ -21,6 +21,7 @@ const Bookings = () => {
     {
       id: "1",
       passengerName: "Sarah Johnson",
+      phoneNumber: "+62812345678",
       route: "Jakarta - Bandung",
       date: "2024-02-20",
       status: "completed",
@@ -30,6 +31,7 @@ const Bookings = () => {
     {
       id: "2",
       passengerName: "Michael Chen",
+      phoneNumber: "+62823456789",
       route: "Surabaya - Malang",
       date: "2024-02-21",
       status: "pending",
@@ -175,14 +177,14 @@ const Bookings = () => {
       <div className="animate-fade-up">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">Bookings</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">Pemesanan</h1>
             <p className="mt-2 text-sm text-gray-600">
-              Manage and track all passenger bookings
+              Kelola dan pantau semua pemesanan penumpang
             </p>
           </div>
           <button className="flex items-center px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors">
             <Download className="w-5 h-5 mr-2" />
-            Export
+            Ekspor Data
           </button>
         </div>
 
@@ -198,7 +200,7 @@ const Bookings = () => {
             <div className="flex-1 relative">
               <input
                 type="text"
-                placeholder="Search bookings..."
+                placeholder="Cari pemesanan..."
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -210,10 +212,10 @@ const Bookings = () => {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-accent"
             >
-              <option value="all">All Status</option>
-              <option value="completed">Completed</option>
-              <option value="pending">Pending</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="all">Semua Status</option>
+              <option value="completed">Selesai</option>
+              <option value="pending">Tertunda</option>
+              <option value="cancelled">Dibatalkan</option>
             </select>
           </div>
 

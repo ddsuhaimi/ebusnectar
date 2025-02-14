@@ -1,5 +1,6 @@
 
 import { cn } from "@/lib/utils";
+import { Bus } from "lucide-react";
 import type { Booking } from "@/types";
 
 interface BookingsTableProps {
@@ -15,22 +16,25 @@ export const BookingsTable = ({ bookings, onStatusChange, onBookingClick }: Book
         <thead>
           <tr>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Passenger
+              Penumpang
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Route
+              No. Telepon
+            </th>
+            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Rute
             </th>
             <th className="hidden sm:table-cell px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Date
+              Tanggal
             </th>
             <th className="hidden sm:table-cell px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Seat
+              Kursi
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Status
             </th>
             <th className="hidden sm:table-cell px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Amount
+              Harga
             </th>
           </tr>
         </thead>
@@ -43,6 +47,9 @@ export const BookingsTable = ({ bookings, onStatusChange, onBookingClick }: Book
             >
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {booking.passengerName}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {booking.phoneNumber}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {booking.route}
@@ -68,7 +75,8 @@ export const BookingsTable = ({ bookings, onStatusChange, onBookingClick }: Book
                     }
                   )}
                 >
-                  {booking.status}
+                  {booking.status === "completed" ? "Selesai" :
+                   booking.status === "pending" ? "Tertunda" : "Dibatalkan"}
                 </button>
               </td>
               <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">

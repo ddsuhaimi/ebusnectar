@@ -1,7 +1,7 @@
-
 export interface Booking {
   id: string;
   passengerName: string;
+  phoneNumber: string;
   route: string;
   date: string;
   status: "completed" | "pending" | "cancelled";
